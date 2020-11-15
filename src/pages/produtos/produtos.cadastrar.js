@@ -34,10 +34,29 @@ export default function ProdutoCadastrar() {
 
   const { register, handleSubmit, watch, errors, reset } = useForm();
   const [size, setSize] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [categoriesError, setCategoriesError] = useState(false);
+  const [categorySelected, setCategorySelected] = useState(null);
   const [color, setColor] = useState('');
   const [loadingImages, setLoadingImages] = useState(false);
   const [imagesError, setImagesError] = useState(false);
   const [imagesArray, setImagesArray] = useState([]);
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const response = await api.get('/getall/categories/');
+
+        setCategories(response.data.docs)
+      
+      } catch (err) {
+        alert('Erro ao buscar as categorias');
+        setCategoriesError(true)
+      }
+    }
+
+    loadCategories()
+  }, [])
 
   const {
     register: registerProductVariant,
@@ -48,11 +67,20 @@ export default function ProdutoCadastrar() {
   } = useForm();
 
   const onSubmitProduct = async (data) => {
+    if (!categorySelected) {
+      alert('Por favor selecione uma categoria');
+
+      return;
+    }
+
     const dataProduct = {
       title: data.titleProduct,
-      category: data.categoryProduct,
+      category: categorySelected.id,
       tags: data.tagProduct.replace(/\s/g, '').split(',')
     };
+
+    console.log('dataProduct')
+    console.log(dataProduct)
 
     try {
       const response = await api.post('/products', dataProduct);
@@ -239,15 +267,24 @@ export default function ProdutoCadastrar() {
                       />
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                      <TextField
-                        required
-                        id="categoryProduct"
-                        name="categoryProduct"
-                        label="ID da Categoria do produto"
-                        fullWidth
-                        type="number"
-                        inputRef={register()}
-                      />
+                      <FormControl
+                        style={{
+                          marginLeft: 1,
+                          padding: 0,
+                          minWidth: '100%'
+                        }}
+                      >
+                        <InputLabel id="size-select-label">Categoria</InputLabel>
+                        <Select
+                          id="category"
+                          value={categorySelected}
+                          onChange={(event) => setCategorySelected(event.target.value)}
+                        >
+                          {categories.map(category => (
+                            <MenuItem value={category}>{category.name}</MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                       {/* <span style={{ color: '#757575' }}>
                         (Separar os ID da categoria se for mais de um, por vírgula ao escrever)
                         </span> */}
@@ -268,14 +305,21 @@ export default function ProdutoCadastrar() {
                       </span>
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                      <Button
-                        variant="contained"
-                        onClick={handleSubmit}
-                        color="primary"
-                        type="submit"
-                      >
-                        Salvar
-                      </Button>
+                      {categoriesError ? (
+                        <span>
+                          Erro ao buscar categorias, tente novamente
+                          mais tarde
+                        </span>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          onClick={handleSubmit}
+                          color="primary"
+                          type="submit"
+                        >
+                          Salvar
+                        </Button>
+                      )}
                     </Grid>
                   </Grid>
                 </form>
