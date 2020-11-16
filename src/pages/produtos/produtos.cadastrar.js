@@ -36,6 +36,9 @@ export default function ProdutoCadastrar() {
   const [size, setSize] = useState('');
   const [categories, setCategories] = useState([]);
   const [categoriesError, setCategoriesError] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [productSelected, setProductSelected] = useState(null);
+  const [productsError, setProductsError] = useState(false);
   const [categorySelected, setCategorySelected] = useState(null);
   const [color, setColor] = useState('');
   const [loadingImages, setLoadingImages] = useState(false);
@@ -43,20 +46,28 @@ export default function ProdutoCadastrar() {
   const [imagesArray, setImagesArray] = useState([]);
 
   useEffect(() => {
-    async function loadCategories() {
+    async function loadSelect() {
       try {
-        const response = await api.get('/getall/categories/');
+        const response = await api.get('/getall/categories');
 
-        setCategories(response.data.docs)
-      
+        setCategories(response.data.docs);
       } catch (err) {
         alert('Erro ao buscar as categorias');
-        setCategoriesError(true)
+        setCategoriesError(true);
+      }
+
+      try {
+        const response = await api.get('/getall/products');
+
+        setProducts(response.data.docs);
+      } catch (err) {
+        alert('Erro ao buscar os produtos');
+        setProductsError(true);
       }
     }
 
-    loadCategories()
-  }, [])
+    loadSelect();
+  }, []);
 
   const {
     register: registerProductVariant,
@@ -78,9 +89,6 @@ export default function ProdutoCadastrar() {
       category: categorySelected.id,
       tags: data.tagProduct.replace(/\s/g, '').split(',')
     };
-
-    console.log('dataProduct')
-    console.log(dataProduct)
 
     try {
       const response = await api.post('/products', dataProduct);
@@ -178,13 +186,19 @@ export default function ProdutoCadastrar() {
       return;
     }
 
+    if (!productSelected) {
+      alert('Por favor selecione um produto');
+
+      return;
+    }
+
     const colorDetail = ntc.name(color);
 
     const dataVariantProduct = {
       title: data.title,
       old_price: parseFloat(data.oldPrice),
       price: parseFloat(data.price),
-      product_id: parseInt(data.productId),
+      product_id: productSelected.id,
       images: data.images.replace(/\s/g, '').split(','),
       // images: imagesArray,
       height: parseFloat(data.height),
@@ -274,14 +288,20 @@ export default function ProdutoCadastrar() {
                           minWidth: '100%'
                         }}
                       >
-                        <InputLabel id="size-select-label">Categoria</InputLabel>
+                        <InputLabel id="category-select-label">
+                          Categoria
+                        </InputLabel>
                         <Select
                           id="category"
                           value={categorySelected}
-                          onChange={(event) => setCategorySelected(event.target.value)}
+                          onChange={(event) =>
+                            setCategorySelected(event.target.value)
+                          }
                         >
-                          {categories.map(category => (
-                            <MenuItem value={category}>{category.name}</MenuItem>
+                          {categories.map((category) => (
+                            <MenuItem value={category}>
+                              {category.name}
+                            </MenuItem>
                           ))}
                         </Select>
                       </FormControl>
@@ -307,8 +327,7 @@ export default function ProdutoCadastrar() {
                     <Grid item xs={12} sm={12}>
                       {categoriesError ? (
                         <span>
-                          Erro ao buscar categorias, tente novamente
-                          mais tarde
+                          Erro ao buscar categorias, tente novamente mais tarde
                         </span>
                       ) : (
                         <Button
@@ -335,15 +354,30 @@ export default function ProdutoCadastrar() {
                 >
                   <Grid container spacing={3}>
                     <Grid item xs={12} sm={12}>
-                      <TextField
-                        required
-                        id="productId"
-                        name="productId"
-                        label="ID do Produto"
-                        fullWidth
-                        type="number"
-                        inputRef={registerProductVariant()}
-                      />
+                      <FormControl
+                        style={{
+                          marginLeft: 1,
+                          padding: 0,
+                          minWidth: '100%'
+                        }}
+                      >
+                        <InputLabel id="product-select-label">
+                          Produto
+                        </InputLabel>
+                        <Select
+                          id="productId"
+                          value={productSelected}
+                          onChange={(event) =>
+                            setProductSelected(event.target.value)
+                          }
+                        >
+                          {products.map((product) => (
+                            <MenuItem value={product}>
+                              {product.title}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
@@ -497,8 +531,12 @@ export default function ProdutoCadastrar() {
                           label="Imagens"
                           multiline={true}
                           fullWidth
-                          value={imagesArray.join(', ')}
-                          onChange={(event) => setImagesArray(event.target.value.replace(/\s/g, '').split(','))}
+                          value={imagesArray.length > 0 ? imagesArray.join(', ') : imagesArray}
+                          onChange={(event) =>
+                            setImagesArray(
+                              event.target.value.replace(/\s/g, '').split(',')
+                            )
+                          }
                           style={{ marginBottom: 10 }}
                           inputRef={registerProductVariant()}
                         />
@@ -533,6 +571,10 @@ export default function ProdutoCadastrar() {
                         <span>
                           Erro ao realizar o upload das imagens, tente novamente
                           mais tarde
+                        </span>
+                      ) : productsError ? (
+                        <span>
+                          Erro ao buscar os produtos, tente novamente mais tarde
                         </span>
                       ) : (
                         <Button
