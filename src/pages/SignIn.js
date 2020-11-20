@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import LoadingButton from '../components/LoadingButton';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -50,14 +51,15 @@ export default function SignIn() {
       if (response.status == 200) {
         login(response.data.token);
 
-        reset();
-
-        history.push('/produtos');
+        if (response.data.admin) {
+          reset();
+          history.push('/produtos');
+        } else {
+          alert('Somente usuários com permissão de administrador podem entrar');
+        }
       }
     } catch (err) {
-      alert(
-        'Usuário ou senha incorretos'
-      );
+      alert('Usuário ou senha incorretos');
     } finally {
       setLoading(false);
     }
@@ -99,24 +101,22 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />
-          { /* <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
           label="Lembrar"
-          /> */ }
-          {loading ? (
-            <span>Carregando</span>
-          ) : (
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Entrar
-            </Button>
-          )}
-          { /* <Grid container>
+          /> */}
+          <LoadingButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            loading={loading}
+            color="primary"
+            disabled={loading}
+            className={classes.submit}
+          >
+            Entrar
+          </LoadingButton>
+          {/* <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
@@ -127,12 +127,10 @@ export default function SignIn() {
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
-          </Grid> */ }
+          </Grid> */}
         </form>
       </div>
-      <Box mt={8}>
-        { /* <Copyright /> */ }
-      </Box>
+      <Box mt={8}>{/* <Copyright /> */}</Box>
     </Container>
   );
 }
