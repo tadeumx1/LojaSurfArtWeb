@@ -52,6 +52,13 @@ export default function ProdutoEditar() {
   const [imagesError, setImagesError] = useState(false);
   const [imagesArray, setImagesArray] = useState([]);
   const [productQuantity, setProductQuantity] = useState(0);
+  const [productIdInputDisabled, setProductIdInputDisabled] = useState(false);
+  const [categoryIdInputDisabled, setCategoryIdInputDisabled] = useState(false);
+  const [
+    productVariantIdInputDisabled,
+    setProductVariantIdInputDisabled
+  ] = useState(false);
+  const [productIdVariantInputDisabled, setProductIdVariantInputDisabled] = useState(false);
 
   const { register, handleSubmit, watch, errors, setValue, reset } = useForm();
 
@@ -73,6 +80,8 @@ export default function ProdutoEditar() {
           setValue('tags', product.tags.join(','));
         }
         setValue('rate_stars', product.rate_stars);
+        setProductIdInputDisabled(true)
+        setCategoryIdInputDisabled(true)
       } else {
         if (variantId != null) {
           console.log('product');
@@ -118,6 +127,12 @@ export default function ProdutoEditar() {
 
           setValueProductVariant('height', variant.height);
           setValueProductVariant('weight', variant.weight);
+
+          setProductVariantIdInputDisabled(true)
+          setProductIdVariantInputDisabled(true)
+
+          setProductIdInputDisabled(true)
+          setCategoryIdInputDisabled(true)
         }
       }
     }
@@ -267,52 +282,50 @@ export default function ProdutoEditar() {
           dataProductQuantity
         );
 
-        console.log('responseIncreaseRealStock')
-        console.log(responseIncreaseRealStock)
+        console.log('responseIncreaseRealStock');
+        console.log(responseIncreaseRealStock);
 
         responseIncreaseAvailableStock = await api.put(
           `/skus/stock/available/increase/${data.productVariantId}`,
           dataProductQuantity
         );
 
-        console.log('responseIncreaseAvailableStock')
-        console.log(responseIncreaseAvailableStock)
-
+        console.log('responseIncreaseAvailableStock');
+        console.log(responseIncreaseAvailableStock);
       } else if (dataVariantProduct.quantity < productQuantity) {
         // Diminuindo
         const valueQuantity = productQuantity - dataVariantProduct.quantity;
-        console.log('valor')
-        console.log(valueQuantity)
+        console.log('valor');
+        console.log(valueQuantity);
         const dataProductQuantity = {
           quantity: valueQuantity
         };
 
-        console.log('eae1')
+        console.log('eae1');
 
         responseDecreaseAvailableStock = await api.put(
           `/skus/stock/available/decrease/${data.productVariantId}`,
           dataProductQuantity
         );
 
-        console.log('responseDecreaseAvailableStock')
-        console.log(responseDecreaseAvailableStock)
+        console.log('responseDecreaseAvailableStock');
+        console.log(responseDecreaseAvailableStock);
 
         responseDecreaseRealStock = await api.put(
           `/skus/stock/real/decrease/${data.productVariantId}`,
           dataProductQuantity
         );
 
-        console.log('responseDecreaseRealStock')
-        console.log(responseDecreaseRealStock)
-
+        console.log('responseDecreaseRealStock');
+        console.log(responseDecreaseRealStock);
       }
 
       if (
-        response.status == 200 &&
-        (responseIncreaseRealStock.status == 200 &&
-        responseIncreaseAvailableStock.status == 200) ||
+        (response.status == 200 &&
+          responseIncreaseRealStock.status == 200 &&
+          responseIncreaseAvailableStock.status == 200) ||
         (responseDecreaseRealStock.status == 200 &&
-        responseDecreaseAvailableStock.status == 200) ||
+          responseDecreaseAvailableStock.status == 200) ||
         response.status == 200
       ) {
         alert(
@@ -326,7 +339,7 @@ export default function ProdutoEditar() {
       }
     } catch (err) {
       alert(
-        'Erro ao criar a variante do produto ' + JSON.stringify(err.message)
+        'Erro ao atualizar a variante do produto ' + JSON.stringify(err.message)
       );
     }
   };
@@ -365,6 +378,7 @@ export default function ProdutoEditar() {
                         id="productId"
                         name="productId"
                         label="ID do Produto"
+                        disabled={productIdInputDisabled}
                         type="number"
                         fullWidth
                         inputRef={register()}
@@ -384,6 +398,7 @@ export default function ProdutoEditar() {
                         id="categoryProduct"
                         name="categoryProduct"
                         label="ID da Categoria do produto"
+                        disabled={categoryIdInputDisabled}
                         fullWidth
                         type="number"
                         inputRef={register()}
@@ -449,6 +464,7 @@ export default function ProdutoEditar() {
                         id="productVariantId"
                         name="productVariantId"
                         label="ID da Variante do Produto"
+                        disabled={productVariantIdInputDisabled}
                         fullWidth
                         type="number"
                         inputRef={registerProductVariant()}
@@ -460,6 +476,7 @@ export default function ProdutoEditar() {
                         id="productId"
                         name="productId"
                         label="ID do Produto"
+                        disabled={productIdVariantInputDisabled}
                         fullWidth
                         type="number"
                         inputRef={registerProductVariant()}

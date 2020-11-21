@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { useHistory } from 'react-router-dom';
@@ -23,6 +23,7 @@ export default function EditCategories() {
 
   const history = useHistory();
   const location = useLocation();
+  const [categoryIdInputDisabled, setCategoryIdInputDisabled] = useState(false)
 
   let category = {};
 
@@ -34,10 +35,12 @@ export default function EditCategories() {
 
   useEffect(() => {
     function loadCategoryInputValues() {
-      if (category != null) {
+      if (category.id) {
         setValue('categoryId', category.id);
         setValue('name', category.name);
         setValue('description', category.description);
+
+        setCategoryIdInputDisabled(true)
       }
     }
 
@@ -87,6 +90,8 @@ export default function EditCategories() {
                         id="categoryId"
                         name="categoryId"
                         label="ID da Categoria"
+                        disabled={categoryIdInputDisabled}
+                        type="number"
                         fullWidth
                         inputRef={register()}
                       />
