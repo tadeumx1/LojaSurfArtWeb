@@ -38,6 +38,10 @@ export default function Produtos() {
     loadProducts();
   }, []);
 
+  const handleCreateProduct = () => {
+    history.push('/produtos/cadastrar');
+  }
+
   const formatTimestampToDate = (date) => {
     const dateFormat = date.replace(/Z/g, '');
     const dateTime = dateFormat.split('T');
@@ -197,6 +201,7 @@ export default function Produtos() {
               size="medium"
               variant="contained"
               color="primary"
+              onClick={handleCreateProduct}
             >
               Criar Produto
             </Button>
