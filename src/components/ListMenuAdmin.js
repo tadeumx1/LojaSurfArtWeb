@@ -18,12 +18,12 @@ export const MainListItems = () => {
 
   return (
     <div>
-      <ListItem button component="a" href="/">
+      { /* <ListItem button component="a" href="/">
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
-      </ListItem>
+        </ListItem> */ }
       { /* <ListItem button component="a" href="/usuarios">
         <ListItemIcon>
           <PeopleIcon />

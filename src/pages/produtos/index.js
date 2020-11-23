@@ -58,7 +58,8 @@ export default function Produtos() {
     const timeFormat = time[0];
 
     const finalDate = `${dateString} ${timeFormat}`;
-    const d = new Date(finalDate);
+    const finalDateFormat = finalDate.replace(/ /g,"T")
+    const d = new Date(finalDateFormat);
 
     const formatFinalDate = format(d, 'dd/MM/yyyy HH:mm:ss', {
       timeZone: 'America/Sao_Paulo'
