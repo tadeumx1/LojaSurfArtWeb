@@ -92,7 +92,7 @@ const handleLogout = () => {
 
 export const SecondaryListItems = (
   <div>
-    <ListSubheader inset>Opções</ListSubheader>
+    { /* <ListSubheader inset>Opções</ListSubheader> */ }
     <ListItem button={true} onClick={handleLogout}>
       <ListItemIcon>
         <ExitToApp />
