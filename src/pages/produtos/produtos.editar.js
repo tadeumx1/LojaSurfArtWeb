@@ -378,7 +378,9 @@ export default function ProdutoEditar() {
                         id="productId"
                         name="productId"
                         label="ID do Produto"
-                        disabled={productIdInputDisabled}
+                        InputProps={{
+                          readOnly: productIdInputDisabled,
+                        }}
                         type="number"
                         fullWidth
                         inputRef={register()}
@@ -398,7 +400,9 @@ export default function ProdutoEditar() {
                         id="categoryProduct"
                         name="categoryProduct"
                         label="ID da Categoria do produto"
-                        disabled={categoryIdInputDisabled}
+                        InputProps={{
+                          readOnly: categoryIdInputDisabled,
+                        }}
                         fullWidth
                         type="number"
                         inputRef={register()}
@@ -464,7 +468,9 @@ export default function ProdutoEditar() {
                         id="productVariantId"
                         name="productVariantId"
                         label="ID da Variante do Produto"
-                        disabled={productVariantIdInputDisabled}
+                        InputProps={{
+                          readOnly: productVariantIdInputDisabled,
+                        }}
                         fullWidth
                         type="number"
                         inputRef={registerProductVariant()}
@@ -476,7 +482,9 @@ export default function ProdutoEditar() {
                         id="productId"
                         name="productId"
                         label="ID do Produto"
-                        disabled={productIdVariantInputDisabled}
+                        InputProps={{
+                          readOnly: productIdVariantInputDisabled,
+                        }}
                         fullWidth
                         type="number"
                         inputRef={registerProductVariant()}

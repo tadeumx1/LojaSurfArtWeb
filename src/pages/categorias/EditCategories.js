@@ -53,6 +53,8 @@ export default function EditCategories() {
       name: data.name,
       description: data.description
     }
+    
+    console.log(data)
 
     try {
       const response = await api.put(`/categories/${data.categoryId}`, categoryData);
@@ -90,7 +92,12 @@ export default function EditCategories() {
                         id="categoryId"
                         name="categoryId"
                         label="ID da Categoria"
-                        disabled={categoryIdInputDisabled}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        InputProps={{
+                          readOnly: categoryIdInputDisabled,
+                        }}
                         type="number"
                         fullWidth
                         inputRef={register()}
@@ -102,6 +109,9 @@ export default function EditCategories() {
                         id="name"
                         name="name"
                         label="Nome"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         fullWidth
                         inputRef={register()}
                       />
@@ -112,6 +122,9 @@ export default function EditCategories() {
                         id="description"
                         name="description"
                         label="Descrição"
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
                         fullWidth
                         inputRef={register()}
                       />
