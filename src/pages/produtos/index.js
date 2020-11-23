@@ -42,6 +42,10 @@ export default function Produtos() {
     history.push('/produtos/cadastrar');
   }
 
+  const handleEditProduct = () => {
+    history.push('/produtos/editar');
+  }
+
   const formatTimestampToDate = (date) => {
     const dateFormat = date.replace(/Z/g, '');
     const dateTime = dateFormat.split('T');
@@ -210,6 +214,7 @@ export default function Produtos() {
               size="medium"
               variant="contained"
               color="primary"
+              onClick={handleEditProduct}
             >
               Atualizar Produto
             </Button>
