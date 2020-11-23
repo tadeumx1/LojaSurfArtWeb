@@ -46,6 +46,10 @@ export default function Produtos() {
     history.push('/produtos/editar');
   }
 
+  const handleDeleteProduct = () => {
+    history.push('/produtos');
+  }
+
   const formatTimestampToDate = (date) => {
     const dateFormat = date.replace(/Z/g, '');
     const dateTime = dateFormat.split('T');
@@ -224,6 +228,7 @@ export default function Produtos() {
               size="medium"
               variant="contained"
               color="primary"
+              onClick={handleDeleteProduct}
             >
               Deletar Produto
             </Button>
