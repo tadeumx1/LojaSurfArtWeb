@@ -24,7 +24,7 @@ export default function Dashboard() {
             { /* <img src={ImgAdmin} /> */ }
           </Grid>
           <Box pt={4}>
-            <Footer />
+            { /* <Footer /> */ }
           </Box>
         </Container>
       </main>
