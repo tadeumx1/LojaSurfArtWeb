@@ -69,6 +69,18 @@ export default function ProductsVariantList() {
     loadProduct();
   }, []);
 
+  const handleCreateProduct = () => {
+    history.push('/produtos/cadastrar');
+  }
+
+  const handleEditProduct = () => {
+    history.push('/produtos/editar');
+  }
+
+  const handleDeleteProduct = () => {
+    history.push('/produtos');
+  }
+
   const formatPrice = (price) => {
     return `R$ ${price.toFixed(2)}`;
   };
@@ -282,6 +294,7 @@ export default function ProductsVariantList() {
               size="medium"
               variant="contained"
               color="primary"
+              onClick={handleCreateProduct}
             >
               Criar Produto
             </Button>
@@ -290,6 +303,7 @@ export default function ProductsVariantList() {
               size="medium"
               variant="contained"
               color="primary"
+              onClick={handleEditProduct}
             >
               Atualizar Produto
             </Button>
@@ -298,6 +312,7 @@ export default function ProductsVariantList() {
               size="medium"
               variant="contained"
               color="primary"
+              onClick={handleDeleteProduct}
             >
               Deletar Produto
             </Button>
